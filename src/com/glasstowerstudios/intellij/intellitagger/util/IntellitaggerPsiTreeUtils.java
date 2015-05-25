@@ -67,6 +67,15 @@ public class IntellitaggerPsiTreeUtils {
             PsiClass parentClass = PsiTreeUtil.getParentOfType(elementAtCurrentPosition, PsiClass.class);
 
             if (parentClass == null) {
+                // We might have gone outside the bounds of the class, in which case we should look for
+                // the first child of the class that is of type PsiClass.
+                for (PsiElement nextElement : aFile.getChildren()) {
+                    if (PsiClass.class.isAssignableFrom(nextElement.getClass())) {
+                        return (PsiClass)nextElement;
+                    }
+                }
+
+                // Hmm... otherwise we might be in an interface or enum or other thingamajig?
                 return null;
             }
 
