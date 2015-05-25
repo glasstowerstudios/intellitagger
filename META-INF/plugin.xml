@@ -25,8 +25,8 @@
   <depends>com.intellij.modules.lang</depends>
   -->
 
-  <extensions defaultExtensionNs="com.glasstowerstudios.intellij">
-    <!-- Add your extensions here -->
+  <extensions defaultExtensionNs="com.intellij">
+      <codeInsight.unresolvedReferenceQuickFixProvider implementation="com.glasstowerstudios.intellij.intellitagger.fixes.UnresolvedLogtagQuickFixProvider" />
   </extensions>
 
   <application-components>

@@ -1,0 +1,23 @@
+package com.glasstowerstudios.intellij.intellitagger.operation;
+
+import com.glasstowerstudios.intellij.intellitagger.util.IntellitaggerPsiTreeUtils;
+import com.intellij.openapi.application.Result;
+import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiClass;
+
+/**
+ * An opearation that adds a 'LOGTAG' field to an enclosing public class.
+ */
+public class LogTagFieldAdder {
+    public static void addLogtagToClass(final PsiClass aPublicClass) {
+        final Project proj = aPublicClass.getProject();
+        new WriteCommandAction(proj) {
+            @Override
+            protected void run(Result result) throws Throwable {
+                IntellitaggerPsiTreeUtils modifier = new IntellitaggerPsiTreeUtils(proj);
+                modifier.addLogtagToClass(aPublicClass);
+            }
+        }.execute();
+    }
+}
