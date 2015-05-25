@@ -1,0 +1,49 @@
+<idea-plugin version="2">
+  <id>com.glasstowerstudios.intellij.intellitagger</id>
+  <name>IntelliTagger</name>
+  <version>0.1</version>
+  <vendor email="support@glasstowerstudios.com" url="http://github.com/glasstowerstudios">Glass Tower Studios</vendor>
+
+  <description><![CDATA[
+      Adds a LOGTAG field to public classes so that <pre>Log.x()</pre>
+      and <pre>Logger.x()</pre> expressions resolve correctly
+    ]]></description>
+
+  <change-notes><![CDATA[
+      <ul>
+        <li>Initial Revision</li>
+       </ul>
+    ]]>
+  </change-notes>
+
+  <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+  <idea-version since-build="131"/>
+
+  <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <extensions defaultExtensionNs="com.glasstowerstudios.intellij">
+    <!-- Add your extensions here -->
+  </extensions>
+
+  <application-components>
+    <!-- Add your application components here -->
+  </application-components>
+
+  <project-components>
+    <!-- Add your project components here -->
+  </project-components>
+
+  <actions>
+        <action id="com.glasstowerstudios.intellij.intellitagger.addlogtag"
+                class="com.glasstowerstudios.intellij.intellitagger.actions.AddLogTagAction"
+                text="LOGTAG" description="Add LOGTAG to enclosing public class">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="control shift l"/>
+        </action>
+  </actions>
+
+</idea-plugin>
