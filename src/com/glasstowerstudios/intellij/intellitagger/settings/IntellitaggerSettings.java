@@ -15,8 +15,11 @@ import java.util.List;
  */
 public class IntellitaggerSettings  implements Configurable {
     private JPanel mRootContainerPanel;
+    private JLabel mFormDescriptionLabel;
+    private JLabel mPossibleTagNamesTitle;
     private JTextField mPossibleTagNamesField;
-    private JTextField mLogtagNameField;
+    private JLabel mVariableNameTitle;
+    private JTextField mVariableNameField;
 
     @Nls
     @Override
@@ -33,6 +36,11 @@ public class IntellitaggerSettings  implements Configurable {
     @Nullable
     @Override
     public JComponent createComponent() {
+        mFormDescriptionLabel.setText(IntellitaggerBundle.message("settings.description"));
+        mPossibleTagNamesTitle.setText(IntellitaggerBundle.message("settings.possibleTagIdentifiers.title"));
+        mPossibleTagNamesField.setToolTipText(IntellitaggerBundle.message("settings.possibleTagIdentifiers.tooltip"));
+        mVariableNameTitle.setText(IntellitaggerBundle.message("settings.variableName.title"));
+        mVariableNameField.setToolTipText(IntellitaggerBundle.message("settings.variableName.tooltip"));
         updatePossibleLogtagsFromSettings();
         updateLogtagVariableNameFromSettings();
         return mRootContainerPanel;
@@ -41,14 +49,14 @@ public class IntellitaggerSettings  implements Configurable {
     @Override
     public boolean isModified() {
         return !getPossibleLogtagsFromSettingsAsCSVString().equals(mPossibleTagNamesField.getText())
-                || !SettingsHelper.getLogtagVariableName().equals(mLogtagNameField.getText().trim());
+                || !SettingsHelper.getLogtagVariableName().equals(mVariableNameField.getText().trim());
     }
 
     @Override
     public void apply() throws ConfigurationException {
         String[] logtagsArray = parsePossibleLogtagCSVStringIntoArray();
         SettingsHelper.setPossibleLogtagNames(logtagsArray);
-        SettingsHelper.setLogtagVariableName(mLogtagNameField.getText().trim());
+        SettingsHelper.setLogtagVariableName(mVariableNameField.getText().trim());
     }
 
     @Override
@@ -94,6 +102,6 @@ public class IntellitaggerSettings  implements Configurable {
     }
 
     private void updateLogtagVariableNameFromSettings() {
-        mLogtagNameField.setText(SettingsHelper.getLogtagVariableName());
+        mVariableNameField.setText(SettingsHelper.getLogtagVariableName());
     }
 }
