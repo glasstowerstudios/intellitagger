@@ -26,7 +26,10 @@
   -->
 
   <extensions defaultExtensionNs="com.intellij">
-      <codeInsight.unresolvedReferenceQuickFixProvider implementation="com.glasstowerstudios.intellij.intellitagger.fixes.UnresolvedLogtagQuickFixProvider" />
+      <codeInsight.unresolvedReferenceQuickFixProvider
+              implementation="com.glasstowerstudios.intellij.intellitagger.fixes.UnresolvedLogtagQuickFixProvider" />
+      <applicationConfigurable instance="com.glasstowerstudios.intellij.intellitagger.settings.IntellitaggerSettings"
+                               displayName="Intellitagger Settings" />
   </extensions>
 
   <application-components>

@@ -1,5 +1,6 @@
 package com.glasstowerstudios.intellij.intellitagger.fixes;
 
+import com.glasstowerstudios.intellij.intellitagger.settings.SettingsHelper;
 import com.intellij.codeInsight.daemon.QuickFixActionRegistrar;
 import com.intellij.codeInsight.quickfix.UnresolvedReferenceQuickFixProvider;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
@@ -15,7 +16,7 @@ public class UnresolvedLogtagQuickFixProvider extends UnresolvedReferenceQuickFi
     @Override
     public void registerFixes(@NotNull PsiJavaCodeReferenceElement aRef,
                               @NotNull QuickFixActionRegistrar quickFixActionRegistrar) {
-        if (aRef.getElement().getText().contains("LOGTAG")) {
+        if (SettingsHelper.isVariableNameInAcceptedLogtagNames(aRef.getElement().getText())) {
             quickFixActionRegistrar.register(new CreateLogtagFix((PsiReferenceExpression)aRef));
         }
     }

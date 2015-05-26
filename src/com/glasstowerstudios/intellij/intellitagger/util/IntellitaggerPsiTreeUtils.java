@@ -1,5 +1,6 @@
 package com.glasstowerstudios.intellij.intellitagger.util;
 
+import com.glasstowerstudios.intellij.intellitagger.settings.SettingsHelper;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
@@ -40,7 +41,9 @@ public class IntellitaggerPsiTreeUtils {
         GlobalSearchScope resolveScope = ResolveScopeManager.getElementResolveScope(aPsiClass);
         PsiExpression initializer =
                 mElementFactory.createExpressionFromText(aPsiClass.getName()+ ".class.getSimpleName()", null);
-        PsiField logtagField = mElementFactory.createField("LOGTAG", PsiType.getJavaLangString(manager, resolveScope));
+        PsiField logtagField =
+                mElementFactory.createField(SettingsHelper.getLogtagVariableName(),
+                                            PsiType.getJavaLangString(manager, resolveScope));
 
         if (logtagField.getModifierList() != null) {
             logtagField.getModifierList().setModifierProperty("public", true);
