@@ -15,7 +15,7 @@ public class LogTagFieldAdder {
    * Add a logging tag field to a {@link PsiClass}.
    *
    * @param aVariableName The name of the field to add.
-   * @param aPublicClass The {@link PsiClass} which will be modified to contain the new field.
+   * @param aPublicClass  The {@link PsiClass} which will be modified to contain the new field.
    */
   public static void addLogtagToClass(final String aVariableName, final PsiClass aPublicClass) {
     final Project proj = aPublicClass.getProject();
