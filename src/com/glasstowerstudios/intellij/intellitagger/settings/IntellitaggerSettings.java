@@ -4,11 +4,18 @@ import com.glasstowerstudios.intellij.intellitagger.resources.IntellitaggerBundl
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.text.StringUtil;
+
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
 /**
  * Controller for settings UI of the Intellitagger plugin.
@@ -20,6 +27,11 @@ public class IntellitaggerSettings  implements Configurable {
     private JTextField mPossibleTagNamesField;
     private JLabel mVariableNameTitle;
     private JTextField mVariableNameField;
+    private JLabel mUndefinedReferencePolicyTitle;
+    private ButtonGroup mUndefinedReferencePolicyGroup;
+    private JRadioButton mAdjustReferencesRadioButton;
+    private JRadioButton mAdjustVariableNameRadioButton;
+    private JRadioButton mNoAdjustmentRadioButton;
 
     @Nls
     @Override
@@ -37,19 +49,46 @@ public class IntellitaggerSettings  implements Configurable {
     @Override
     public JComponent createComponent() {
         mFormDescriptionLabel.setText(IntellitaggerBundle.message("settings.description"));
-        mPossibleTagNamesTitle.setText(IntellitaggerBundle.message("settings.possibleTagIdentifiers.title"));
-        mPossibleTagNamesField.setToolTipText(IntellitaggerBundle.message("settings.possibleTagIdentifiers.tooltip"));
+        mPossibleTagNamesTitle.setText(
+          IntellitaggerBundle.message("settings.possibleTagIdentifiers.title"));
+        mPossibleTagNamesField.setToolTipText(
+          IntellitaggerBundle.message("settings.possibleTagIdentifiers.tooltip"));
         mVariableNameTitle.setText(IntellitaggerBundle.message("settings.variableName.title"));
         mVariableNameField.setToolTipText(IntellitaggerBundle.message("settings.variableName.tooltip"));
         updatePossibleLogtagsFromSettings();
         updateLogtagVariableNameFromSettings();
+
+        mUndefinedReferencePolicyTitle.setText(
+          IntellitaggerBundle.message("settings.undefinedReference.title"));
+      mUndefinedReferencePolicyTitle.setToolTipText(
+        IntellitaggerBundle.message("settings.undefinedReference.tooltip"));
+      mAdjustReferencesRadioButton.setText(
+          IntellitaggerBundle.message("settings.undefinedReference.adjustReferenceOption.title"));
+        mAdjustReferencesRadioButton.setToolTipText(
+          IntellitaggerBundle.message("settings.undefinedReference.adjustReferenceOption.tooltip"));
+        mAdjustVariableNameRadioButton.setText(
+          IntellitaggerBundle.message("settings.undefinedReference.adjustVariableNameOption.title"));
+        mAdjustVariableNameRadioButton.setToolTipText(
+          IntellitaggerBundle.message("settings.undefinedReference.adjustVariableNameOption.tooltip"));
+        mNoAdjustmentRadioButton.setText(
+          IntellitaggerBundle.message("settings.undefinedReference.noAdjustmentOption.title"));
+        mNoAdjustmentRadioButton.setToolTipText(
+          IntellitaggerBundle.message("settings.undefinedReference.noAdjustmentOption.tooltip"));
+
+        mUndefinedReferencePolicyGroup = new ButtonGroup();
+        mUndefinedReferencePolicyGroup.add(mAdjustReferencesRadioButton);
+        mUndefinedReferencePolicyGroup.add(mAdjustVariableNameRadioButton);
+        mUndefinedReferencePolicyGroup.add(mNoAdjustmentRadioButton);
+
+        setUIFromUndefinedReferencePolicy(SettingsHelper.getUndefinedReferencePolicy());
         return mRootContainerPanel;
     }
 
     @Override
     public boolean isModified() {
         return !getPossibleLogtagsFromSettingsAsCSVString().equals(mPossibleTagNamesField.getText())
-                || !SettingsHelper.getLogtagVariableName().equals(mVariableNameField.getText().trim());
+                || !SettingsHelper.getLogtagVariableName().equals(mVariableNameField.getText().trim())
+                || SettingsHelper.getUndefinedReferencePolicy() != getUndefinedReferencePolicyFromUI();
     }
 
     @Override
@@ -57,6 +96,7 @@ public class IntellitaggerSettings  implements Configurable {
         String[] logtagsArray = parsePossibleLogtagCSVStringIntoArray();
         SettingsHelper.setPossibleLogtagNames(logtagsArray);
         SettingsHelper.setLogtagVariableName(mVariableNameField.getText().trim());
+        SettingsHelper.setUndefinedReferencePolicy(getUndefinedReferencePolicyFromUI());
     }
 
     @Override
@@ -103,5 +143,39 @@ public class IntellitaggerSettings  implements Configurable {
 
     private void updateLogtagVariableNameFromSettings() {
         mVariableNameField.setText(SettingsHelper.getLogtagVariableName());
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+    }
+
+    private void setUIFromUndefinedReferencePolicy(SettingsHelper.UndefinedReferencePolicy aPolicy) {
+        switch (aPolicy) {
+            case ADJUST_VARIABLE_NAME:
+                mAdjustVariableNameRadioButton.setSelected(true);
+                break;
+
+            case ADJUST_REFERENCES:
+                mAdjustReferencesRadioButton.setSelected(true);
+                break;
+
+            case NO_ADJUSTMENT:
+            default:
+                mNoAdjustmentRadioButton.setSelected(true);
+                break;
+        }
+    }
+
+    private SettingsHelper.UndefinedReferencePolicy getUndefinedReferencePolicyFromUI() {
+        SettingsHelper.UndefinedReferencePolicy policy;
+        if (mAdjustReferencesRadioButton.isSelected()) {
+            policy = SettingsHelper.UndefinedReferencePolicy.ADJUST_REFERENCES;
+        } else if (mAdjustVariableNameRadioButton.isSelected()) {
+            policy = SettingsHelper.UndefinedReferencePolicy.ADJUST_VARIABLE_NAME;
+        } else {
+            policy = SettingsHelper.UndefinedReferencePolicy.NO_ADJUSTMENT;
+        }
+
+        return policy;
     }
 }

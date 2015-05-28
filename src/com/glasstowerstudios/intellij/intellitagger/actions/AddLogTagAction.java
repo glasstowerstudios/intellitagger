@@ -1,5 +1,6 @@
 package com.glasstowerstudios.intellij.intellitagger.actions;
 
+import com.glasstowerstudios.intellij.intellitagger.settings.SettingsHelper;
 import com.glasstowerstudios.intellij.intellitagger.util.IntellitaggerPsiTreeUtils;
 import com.glasstowerstudios.intellij.intellitagger.operation.JavaSourceChecker;
 import com.glasstowerstudios.intellij.intellitagger.operation.LogTagFieldAdder;
@@ -33,7 +34,7 @@ public class AddLogTagAction extends AnAction {
         PsiClass publicClass = psiTreeUtils.getEnclosingPublicClassFromFile(file);
 
         if (publicClass != null) {
-            LogTagFieldAdder.addLogtagToClass(publicClass);
+            LogTagFieldAdder.addLogtagToClass(SettingsHelper.getLogtagVariableName(), publicClass);
         }
 
         return;

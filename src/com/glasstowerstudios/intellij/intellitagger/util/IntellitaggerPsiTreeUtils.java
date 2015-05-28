@@ -1,11 +1,20 @@
 package com.glasstowerstudios.intellij.intellitagger.util;
 
-import com.glasstowerstudios.intellij.intellitagger.settings.SettingsHelper;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementFactory;
+import com.intellij.psi.PsiExpression;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiModifier;
+import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.ResolveScopeManager;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -32,17 +41,18 @@ public class IntellitaggerPsiTreeUtils {
     }
 
     /**
-     * Add a 'LOGTAG' field to the source for a given {@link PsiClass}.
+     * Add a logging tag field to the source for a given {@link PsiClass}.
      *
+     * @param aVariableName The name of the field to create.
      * @param aPsiClass The enclosing {@link PsiClass} on which to perform this operation.
      */
-    public void addLogtagToClass(PsiClass aPsiClass) {
+    public void addLogtagToClass(String aVariableName, PsiClass aPsiClass) {
         PsiManager manager = aPsiClass.getManager();
         GlobalSearchScope resolveScope = ResolveScopeManager.getElementResolveScope(aPsiClass);
         PsiExpression initializer =
                 mElementFactory.createExpressionFromText(aPsiClass.getName()+ ".class.getSimpleName()", null);
         PsiField logtagField =
-                mElementFactory.createField(SettingsHelper.getLogtagVariableName(),
+                mElementFactory.createField(aVariableName,
                                             PsiType.getJavaLangString(manager, resolveScope));
 
         if (logtagField.getModifierList() != null) {

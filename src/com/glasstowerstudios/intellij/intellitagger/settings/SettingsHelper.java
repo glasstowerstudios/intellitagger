@@ -8,6 +8,13 @@ import com.intellij.ide.util.PropertiesComponent;
 public class SettingsHelper {
     private static final String POSSIBLE_LOGTAG_SETTINGS_KEY = "possibleLogtagNames";
     private static final String LOGTAG_VARIABLE_NAME_SETTINGS_KEY = "logtagVariableName";
+    private static final String UNDEFINED_REFERENCE_POLICY_SETTINGS_KEY = "undefinedReferencePolicy";
+
+    public enum UndefinedReferencePolicy {
+        NO_ADJUSTMENT,
+        ADJUST_VARIABLE_NAME,
+        ADJUST_REFERENCES
+    }
 
     public static String[] getPossibleLogtagNames() {
         PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
@@ -40,5 +47,25 @@ public class SettingsHelper {
         // TODO: We should check here to make sure this is a legal Java identifier.
         PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
         propertiesComponent.setValue(LOGTAG_VARIABLE_NAME_SETTINGS_KEY, aVariableName);
+    }
+
+    public static final void setUndefinedReferencePolicy(UndefinedReferencePolicy aPolicy) {
+        PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
+        propertiesComponent.setValue(UNDEFINED_REFERENCE_POLICY_SETTINGS_KEY, Integer.toString(aPolicy.ordinal()));
+    }
+
+    public static final UndefinedReferencePolicy getUndefinedReferencePolicy() {
+        PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
+        int urp = propertiesComponent.getOrInitInt(UNDEFINED_REFERENCE_POLICY_SETTINGS_KEY,
+                                                   UndefinedReferencePolicy.NO_ADJUSTMENT.ordinal());
+        if (urp == UndefinedReferencePolicy.ADJUST_REFERENCES.ordinal()) {
+            return UndefinedReferencePolicy.ADJUST_REFERENCES;
+        }
+
+        if (urp == UndefinedReferencePolicy.ADJUST_VARIABLE_NAME.ordinal()) {
+            return UndefinedReferencePolicy.ADJUST_VARIABLE_NAME;
+        }
+
+        return UndefinedReferencePolicy.NO_ADJUSTMENT;
     }
 }
