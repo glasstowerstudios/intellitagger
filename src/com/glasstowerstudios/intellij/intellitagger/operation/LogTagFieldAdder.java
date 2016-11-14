@@ -19,12 +19,15 @@ public class LogTagFieldAdder {
    */
   public static void addLogtagToClass(final String aVariableName, final PsiClass aPublicClass) {
     final Project proj = aPublicClass.getProject();
-    new WriteCommandAction(proj) {
-      @Override
-      protected void run(Result result) throws Throwable {
-        IntellitaggerPsiTreeUtils modifier = new IntellitaggerPsiTreeUtils(proj);
-        modifier.addLogtagToClass(aVariableName, aPublicClass);
-      }
-    }.execute();
+
+//    if (SwingUtilities.isEventDispatchThread()) {
+      new WriteCommandAction(proj) {
+        @Override
+        protected void run(Result result) throws Throwable {
+          IntellitaggerPsiTreeUtils modifier = new IntellitaggerPsiTreeUtils(proj);
+          modifier.addLogtagToClass(aVariableName, aPublicClass);
+        }
+      }.execute();
+//    }
   }
 }

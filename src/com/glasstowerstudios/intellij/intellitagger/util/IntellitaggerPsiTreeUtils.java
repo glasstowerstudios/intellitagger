@@ -3,6 +3,7 @@ package com.glasstowerstudios.intellij.intellitagger.util;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
@@ -73,8 +74,8 @@ public class IntellitaggerPsiTreeUtils {
    *
    * @return The outermost {@link PsiClass} in the file, if one exists; null, otherwise.g
    */
-  public PsiClass getEnclosingPublicClassFromFile(PsiFile aFile) {
-    Editor editor = PlatformDataKeys.EDITOR.getData(mContext);
+  public static PsiClass getEnclosingPublicClassFromFile(PsiFile aFile) {
+    Editor editor = FileEditorManager.getInstance(aFile.getProject()).getSelectedTextEditor();
     int offset = editor.getCaretModel().getOffset();
     PsiElement elementAtCurrentPosition = aFile.findElementAt(offset);
     while (elementAtCurrentPosition != null) {

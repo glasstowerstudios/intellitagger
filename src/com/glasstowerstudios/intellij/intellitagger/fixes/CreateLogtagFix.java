@@ -5,6 +5,7 @@ import com.glasstowerstudios.intellij.intellitagger.resources.IntellitaggerBundl
 import com.glasstowerstudios.intellij.intellitagger.settings.SettingsHelper;
 import com.intellij.codeInsight.daemon.impl.quickfix.CreateVarFromUsageFix;
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiField;
@@ -26,7 +27,9 @@ import java.util.Collection;
  * "LOGTAG") is missing.
  */
 public class CreateLogtagFix extends CreateVarFromUsageFix {
-  public CreateLogtagFix(PsiReferenceExpression referenceElement) {
+  private static final Logger LOG = Logger.getInstance(CreateLogtagFix.class);
+
+  public CreateLogtagFix(final PsiReferenceExpression referenceElement) {
     super(referenceElement);
   }
 
@@ -123,5 +126,9 @@ public class CreateLogtagFix extends CreateVarFromUsageFix {
   @Override
   public String getFamilyName() {
     return IntellitaggerBundle.message("add.logtag.family");
+  }
+
+  public PsiReferenceExpression getReferenceExpression() {
+    return myReferenceExpression;
   }
 }
